@@ -8,15 +8,12 @@ using System.Web;
 
 namespace RepositoryPatternWithUnitOfWorkMVC5.Services
 {
-    public class ProductService : IProductService
+    public class ProductService : BaseService, IProductService
     {
-        private readonly IUnitOfWork _unitOfWork;
         //private readonly IRepository<Product> _productRepository;        
 
-
-        public ProductService(IUnitOfWork unitOfWork)
-        {
-            _unitOfWork = unitOfWork;
+        public ProductService(IUnitOfWork unitOfWork) : base(unitOfWork)
+        {            
             //_productRepository = _unitOfWork.GetRepository<Product>();                        
         }
 
@@ -24,11 +21,6 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.Services
         //{
         //    get { return _productRepository; }
         //}
-
-        private IUnitOfWork UnitOfWork
-        {
-            get { return _unitOfWork; }
-        }
 
         public void AddProduct(Product product)
         {

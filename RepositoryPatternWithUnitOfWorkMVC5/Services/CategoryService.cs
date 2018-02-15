@@ -8,18 +8,10 @@ using System.Web;
 
 namespace RepositoryPatternWithUnitOfWorkMVC5.Services
 {
-    public class CategoryService : ICategoryService
+    public class CategoryService : BaseService, ICategoryService
     {
-        private readonly IUnitOfWork _unitOfWork;        
-
-        public CategoryService(IUnitOfWork unitOfWork)
-        {
-            _unitOfWork = unitOfWork;            
-        }
-
-        private IUnitOfWork UnitOfWork
-        {
-            get { return _unitOfWork; }
+        public CategoryService(IUnitOfWork unitOfWork) : base(unitOfWork)
+        {            
         }
 
         public IEnumerable<Category> GetAllCategories()
