@@ -9,6 +9,6 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.Services.Interfaces
 {
     public interface ICategoryAndProductService
     {
-        void AddCategoryWithProduct(Category category, List<Product> products);
+        void AddCategoryWithProduct(Category category, IList<Product> products);
     }
 }

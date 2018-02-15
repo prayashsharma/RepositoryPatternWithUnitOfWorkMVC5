@@ -13,7 +13,7 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.Services
         public CategoryAndProductService(IUnitOfWork unitOfWork): base(unitOfWork)
         {
         }
-        public void AddCategoryWithProduct(Category category, List<Product> products)
+        public void AddCategoryWithProduct(Category category, IList<Product> products)
         {            
             UnitOfWork.Categories.Add(category);
             foreach (var p in products)
