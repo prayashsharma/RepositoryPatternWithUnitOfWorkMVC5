@@ -157,6 +157,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\CategoriesController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -164,6 +165,10 @@
     <Compile Include="Migrations\201802141921546_Initial.cs" />
     <Compile Include="Migrations\201802141921546_Initial.Designer.cs">
       <DependentUpon>201802141921546_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201802151607122_RequireCategoryName.cs" />
+    <Compile Include="Migrations\201802151607122_RequireCategoryName.Designer.cs">
+      <DependentUpon>201802151607122_RequireCategoryName.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
@@ -267,6 +272,12 @@
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\Products\Create.cshtml" />
     <Content Include="Views\Categories\Index.cshtml" />
+    <Content Include="Views\Categories\Details.cshtml" />
+    <Content Include="Views\Categories\Delete.cshtml" />
+    <Content Include="Views\Categories\Edit.cshtml" />
+    <Content Include="Views\Categories\Create.cshtml" />
+    <Content Include="Views\Categories\GetAllCategoriesWithProducts.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -279,6 +290,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201802141921546_Initial.resx">
       <DependentUpon>201802141921546_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201802151607122_RequireCategoryName.resx">
+      <DependentUpon>201802151607122_RequireCategoryName.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

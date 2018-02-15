@@ -14,8 +14,10 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.Models
         }
 
         [Key]
+        [Required]
         public int Id { get; set; }
         [Display(Name = "Category")]
+        [Required]
         public string Name { get; set; }
         public virtual ICollection<Product> Products { get; set; }
 

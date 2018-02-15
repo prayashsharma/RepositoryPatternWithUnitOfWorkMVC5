@@ -1,0 +1,34 @@
+﻿@model IEnumerable<RepositoryPatternWithUnitOfWorkMVC5.Models.Category>
+
+@{
+    ViewBag.Title = "GetAllCategoriesWithProducts";
+}
+
+<h2>GetAllCategoriesWithProducts</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>Products</th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td></td>
+        </tr>
+        foreach (var product in item.Products)
+        {
+            <tr>
+                <td></td>
+                <td>@product.Name</td>
+            </tr>
+        }
+    }
+
+</table>
