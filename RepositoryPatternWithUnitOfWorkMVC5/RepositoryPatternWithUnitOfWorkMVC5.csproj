@@ -187,7 +187,9 @@
     <Compile Include="Services\CategoryService.cs" />
     <Compile Include="Services\Interfaces\ICategoryService.cs" />
     <Compile Include="Services\Interfaces\IProductService.cs" />
+    <Compile Include="Services\Interfaces\ICategoryAndProductService.cs" />
     <Compile Include="Services\ProductService.cs" />
+    <Compile Include="Services\CategoryAndProductService.cs" />
     <Compile Include="ViewModels\ProductCreateEditFormViewModel.cs" />
   </ItemGroup>
   <ItemGroup>

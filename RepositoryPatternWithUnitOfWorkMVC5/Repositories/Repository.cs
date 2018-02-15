@@ -14,7 +14,7 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.Repositories
 
         public Repository(DbContext context)
         {
-            _context = context;
+            _context = context ?? throw new ArgumentNullException(nameof(context));
             _dbset = _context.Set<TEntity>();
         }
         public TEntity Get(int id)
@@ -28,7 +28,7 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.Repositories
 
         public IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate)
         {
-            return _dbset.Where(predicate);
+            return _dbset.Where(predicate).ToList();
         }
 
         public TEntity SingleOrDefault(Expression<Func<TEntity, bool>> predicate)
@@ -63,11 +63,5 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.Repositories
                 _context.Entry(existing).CurrentValues.SetValues(entity);
             }
         }
-
-        //public IEnumerable<TEntity> FindBy(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includes)
-        //{
-        //    var query = _dbset.Where(predicate);
-        //    return includes.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
-        //} 
     }
 }

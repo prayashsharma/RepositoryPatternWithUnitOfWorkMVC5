@@ -18,6 +18,7 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.App_Start
             builder.RegisterType<ApplicationDbContext>().AsSelf().InstancePerRequest();
             builder.RegisterType<ProductService>().As<IProductService>().InstancePerRequest();
             builder.RegisterType<CategoryService>().As<ICategoryService>().InstancePerRequest();
+            builder.RegisterType<CategoryAndProductService>().As<ICategoryAndProductService>().InstancePerRequest();
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
 
             builder.RegisterControllers(typeof(MvcApplication).Assembly).InstancePerRequest();

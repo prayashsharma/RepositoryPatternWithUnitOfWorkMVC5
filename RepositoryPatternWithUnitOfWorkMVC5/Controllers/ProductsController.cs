@@ -14,11 +14,13 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.Controllers
 
         private readonly IProductService _productService;
         private readonly ICategoryService _categoryService;
+        private readonly ICategoryAndProductService _categoryAndProductService;
 
-        public ProductsController(IProductService productService, ICategoryService categoryService)
+        public ProductsController(IProductService productService, ICategoryService categoryService, ICategoryAndProductService categoryAndProductService)
         {
             _productService = productService ?? throw new ArgumentNullException(nameof(productService));
             _categoryService = categoryService ?? throw new ArgumentNullException(nameof(categoryService));
+            _categoryAndProductService = categoryAndProductService ?? throw new ArgumentNullException(nameof(categoryAndProductService));
         }
         public ActionResult Index()
         {
@@ -157,6 +159,25 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.Controllers
 
             //just for the demo, I am returning single product as a list
             return View("Index", new List<Product> { product });
+        }
+
+        // Update related entities at the same time.
+        public ActionResult CreateCategoryAndProducts()
+        {
+            var newCategory = new Category
+            {
+                Name = "TestCategory"
+            };
+
+            var newProducts = new List<Product>
+            {
+                new Product {Name = "P1",Description = "blah blah 1" },
+                new Product {Name = "P2",Description = "blah blah 2" },
+                new Product {Name = "P3",Description = "blah blah 3" },
+                new Product {Name = "P4",Description = "blah blah 4" },
+            };            
+            _categoryAndProductService.AddCategoryWithProduct(newCategory, newProducts);
+            return RedirectToAction("Index");
         }
     }
 }
