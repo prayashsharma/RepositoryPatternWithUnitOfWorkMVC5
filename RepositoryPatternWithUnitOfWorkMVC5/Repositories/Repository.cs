@@ -63,5 +63,14 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.Repositories
                 _context.Entry(existing).CurrentValues.SetValues(entity);
             }
         }
+        public virtual IEnumerable<TEntity> Include(params Expression<Func<TEntity, object>>[] includeProperties)
+        {
+            IQueryable<TEntity> query = _context.Set<TEntity>();
+            foreach (var includeProperty in includeProperties)
+            {
+                query = query.Include(includeProperty);
+            }
+            return query.AsEnumerable();
+        }
     }
 }

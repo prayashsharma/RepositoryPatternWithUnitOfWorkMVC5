@@ -6,7 +6,7 @@ using System.Web;
 
 namespace RepositoryPatternWithUnitOfWorkMVC5.Services
 {
-    public abstract class BaseService
+    public class BaseService
     {
         private readonly IUnitOfWork _unitOfWork;
 

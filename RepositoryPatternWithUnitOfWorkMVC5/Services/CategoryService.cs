@@ -9,51 +9,59 @@ using System.Web;
 namespace RepositoryPatternWithUnitOfWorkMVC5.Services
 {
     public class CategoryService : BaseService, ICategoryService
-    {
+    {        
+        private readonly IRepository<Category> _categoryRepository;
+
         public CategoryService(IUnitOfWork unitOfWork) : base(unitOfWork)
         {            
+            _categoryRepository = UnitOfWork.GetRepository<Category>();
+        }
+
+        public IRepository<Category> CategoryRepository
+        {
+            get { return _categoryRepository; }
         }
 
         public IEnumerable<Category> GetAllCategories()
         {
-            return UnitOfWork.Categories.GetAll();
+            return CategoryRepository.GetAll();            
         }
 
         public Category GetCategoryById(int id)
         {
-            return UnitOfWork.Categories.Get(id);
+            return CategoryRepository.Get(id);            
         }
 
         public bool IsCategoryExists(int id)
         {
-            return UnitOfWork.Categories.Get(id) != null ? true : false;
+            return CategoryRepository.Get(id) != null ? true : false;            
         }
 
         public void AddCategory(Category category)
         {
-            UnitOfWork.Categories.Add(category);
+            CategoryRepository.Add(category);            
             UnitOfWork.Complete();
         }
 
         public void EditCategory(Category category)
         {
-            UnitOfWork.Categories.Edit(category, category.Id);
+            CategoryRepository.Edit(category, category.Id);            
             UnitOfWork.Complete();
         }
 
         public void RemoveCategory(Category category)
         {
-            var categoryToRemove = UnitOfWork.Categories.SingleOrDefault(x => x.Id == category.Id);
+            var categoryToRemove = CategoryRepository.SingleOrDefault(x => x.Id == category.Id);
             if (categoryToRemove != null)
             {
-                UnitOfWork.Categories.Remove(categoryToRemove);
+                CategoryRepository.Remove(categoryToRemove);
                 UnitOfWork.Complete();
             }
         }
 
         public IEnumerable<Category> GetAllCategoriesWithProducts()
         {
-            return UnitOfWork.Categories.GetAllWithProducts();
+            return CategoryRepository.Include(x => x.Products);
         }
     }
 }

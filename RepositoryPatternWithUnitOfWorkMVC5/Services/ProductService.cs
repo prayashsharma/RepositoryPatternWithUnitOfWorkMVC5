@@ -8,68 +8,68 @@ using System.Web;
 
 namespace RepositoryPatternWithUnitOfWorkMVC5.Services
 {
-    public class ProductService : BaseService, IProductService
-    {
-        //private readonly IRepository<Product> _productRepository;        
+    public class ProductService :  BaseService, IProductService
+    {        
+        private readonly IRepository<Product> _productRepository;
 
-        public ProductService(IUnitOfWork unitOfWork) : base(unitOfWork)
+        public ProductService(IUnitOfWork unitOfWork) : base (unitOfWork)
         {            
-            //_productRepository = _unitOfWork.GetRepository<Product>();                        
+            _productRepository = UnitOfWork.GetRepository<Product>();
         }
 
-        //private IRepository<Product> Products
-        //{
-        //    get { return _productRepository; }
-        //}
+        public IRepository<Product> ProductRepository
+        {
+            get { return _productRepository; }
+        }
 
         public void AddProduct(Product product)
         {
-            UnitOfWork.Products.Add(product);
+            ProductRepository.Add(product);            
             UnitOfWork.Complete();
         }
 
         public void EditProduct(Product product)
         {
-            UnitOfWork.Products.Edit(product, product.Id);
+            ProductRepository.Edit(product, product.Id);            
             UnitOfWork.Complete();
         }
 
         public IEnumerable<Product> GetAllProducts()
         {
-            return UnitOfWork.Products.GetAll();
+            return ProductRepository.GetAll();            
         }
 
         public IEnumerable<Product> GetAllProductsWithCategory()
         {
-            return UnitOfWork.Products.GetAllWithCategory();
+            return ProductRepository.Include(x => x.Category);            
         }
 
         public Product GetProductById(int id)
         {
-            return UnitOfWork.Products.Get(id);
+            return ProductRepository.Get(id);            
         }
 
         public Product GetProductByName(string name)
         {
-            return UnitOfWork.Products.SingleOrDefault(x => x.Name == name);
+            return ProductRepository.SingleOrDefault(x => x.Name == name);            
         }
 
         public Product GetProductWithCategory(int id)
         {
-            return UnitOfWork.Products.GetWithCategory(id);
+            return ProductRepository.Include(x => x.Category).SingleOrDefault(x => x.Id == id);            
         }
 
         public bool IsProductExists(int id)
         {
-            return UnitOfWork.Products.Get(id) != null ? true : false;
+            return ProductRepository.Get(id) != null ? true : false;            
         }
 
         public void RemoveProduct(Product product)
         {
-            var productToRemove = UnitOfWork.Products.SingleOrDefault(x => x.Id == product.Id);
+            var productToRemove = ProductRepository.Get(product.Id);
             if (productToRemove != null)
             {
-                UnitOfWork.Products.Remove(productToRemove);
+                ProductRepository.Remove(productToRemove);
                 UnitOfWork.Complete();
             }
         }

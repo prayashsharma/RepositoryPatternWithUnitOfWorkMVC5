@@ -161,7 +161,7 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.Controllers
             return View("Index", new List<Product> { product });
         }
 
-        // Update related entities at the same time.
+        // Test Code to update related entities at the same time.
         public ActionResult CreateCategoryAndProducts()
         {
             var newCategory = new Category

@@ -18,8 +18,6 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.Repositories.Interfaces
         void Remove(TEntity entity);
         void RemoveRange(IEnumerable<TEntity> entities);
         void Edit(TEntity entity, int key);
-
-        //IQueryable<TEntity> IncludeMultiple(params Expression<Func<TEntity, object>>[] includes);
-    
+        IEnumerable<TEntity> Include(params Expression<Func<TEntity, object>>[] includeProperties);
     }
 }
