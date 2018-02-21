@@ -39,7 +39,7 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.Tests.Controllers
         }
 
         [TestMethod]
-        public void Create_InvalidModel_ReturnsModelWithListOfCategories()
+        public void Create_PostInvalidModel_ReturnsModelWithListOfCategories()
         {
             var mockProductService = new Mock<IProductService>();
             var mockCategoryService = new Mock<ICategoryService>();
@@ -65,7 +65,7 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.Tests.Controllers
         }
 
         [TestMethod]
-        public void Create_ValidModel_RedirectsToActionIndex()
+        public void Create_PostValidModel_RedirectsToActionIndex()
         {
             var mockProductService = new Mock<IProductService>();
             var mockCategoryService = new Mock<ICategoryService>();
@@ -73,8 +73,7 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.Tests.Controllers
 
             var controller = new ProductsController(mockProductService.Object,
                                                                 mockCategoryService.Object,
-                                                                mockCategoryProductService.Object);
-            mockCategoryService.Setup(x => x.GetAllCategories()).Returns(GetCategories());
+                                                                mockCategoryProductService.Object);           
 
             var productCreateEditFormViewModel = new ProductCreateEditFormViewModel
             {
@@ -87,14 +86,184 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.Tests.Controllers
             Assert.AreEqual(result.RouteValues["Action"], "Index");
         }
 
+        [TestMethod]
+        public void Create_GetRequest_ReturnViewResult()
+        {
+            var mockProductService = new Mock<IProductService>();
+            var mockCategoryService = new Mock<ICategoryService>();
+            var mockCategoryProductService = new Mock<ICategoryAndProductService>();
+
+            var controller = new ProductsController(mockProductService.Object,
+                                                                mockCategoryService.Object,
+                                                                mockCategoryProductService.Object);
+
+            mockCategoryService.Setup(x => x.GetAllCategories()).Returns(GetCategories());
+
+            var result = controller.Create();
+            var vm = result as ViewResult;
+            var categories = ((ProductCreateEditFormViewModel)vm.ViewData.Model).Categories.ToList();
+
+            Assert.IsInstanceOfType(result, typeof(ViewResult));
+            Assert.AreEqual(4, categories.Count);
+            Assert.AreEqual(3, categories[2].Id);
+        }
+
+        [TestMethod]
+        public void Edit_PostInvalidModel_ReturnsModelWithListOfCategories()
+        {
+            var mockProductService = new Mock<IProductService>();
+            var mockCategoryService = new Mock<ICategoryService>();
+            var mockCategoryProductService = new Mock<ICategoryAndProductService>();
+
+            var controller = new ProductsController(mockProductService.Object,
+                                                                mockCategoryService.Object,
+                                                                mockCategoryProductService.Object);
+            mockCategoryService.Setup(x => x.GetAllCategories()).Returns(GetCategories());
+
+            var productCreateEditViewModel = new ProductCreateEditFormViewModel();
+            controller.ModelState.AddModelError("FakeError", "Fake Error Message");
+
+            var result = controller.Edit(productCreateEditViewModel) as ViewResult;
+            var categories = ((ProductCreateEditFormViewModel)result.ViewData.Model).Categories.ToList();
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(string.Empty, result.ViewName);
+            Assert.IsFalse(result.ViewData.ModelState.IsValid);
+            Assert.AreEqual(4, categories.Count);
+            Assert.AreEqual(2, categories[1].Id);
+            Assert.AreEqual("Accessories", categories[3].Name);
+        }
+
+        [TestMethod]
+        public void Edit_PostValidModel_RedirectsToActionIndex()
+        {
+            var mockProductService = new Mock<IProductService>();
+            var mockCategoryService = new Mock<ICategoryService>();
+            var mockCategoryProductService = new Mock<ICategoryAndProductService>();
+
+            var controller = new ProductsController(mockProductService.Object,
+                                                                mockCategoryService.Object,
+                                                                mockCategoryProductService.Object);            
+
+            var productCreateEditFormViewModel = new ProductCreateEditFormViewModel
+            {
+                Id = 1,
+                Name = "Test Product",
+                Description = "Test Product Description",
+                CategoryId = 1
+            };
+
+            var result = controller.Edit(productCreateEditFormViewModel) as RedirectToRouteResult;
+            Assert.AreEqual(result.RouteValues["Action"], "Index");
+        }
+
+        [TestMethod]
+        public void Edit_GetRequest_ReturnViewResultWithProduct()
+        {
+            var mockProductService = new Mock<IProductService>();
+            var mockCategoryService = new Mock<ICategoryService>();
+            var mockCategoryProductService = new Mock<ICategoryAndProductService>();
+
+            var controller = new ProductsController(mockProductService.Object,
+                                                                mockCategoryService.Object,
+                                                                mockCategoryProductService.Object);
+
+            mockProductService.Setup(x => x.GetProductById(3)).Returns(GetProducts().Single(x => x.Id == 3));
+            mockCategoryService.Setup(x => x.GetAllCategories()).Returns(GetCategories());
+
+            var result = controller.Edit(3) as ViewResult;
+            var productCreateEditFormViewModel = result.ViewData.Model as ProductCreateEditFormViewModel;            
+
+            Assert.IsNotNull(productCreateEditFormViewModel);
+            Assert.AreEqual(3, productCreateEditFormViewModel.Id);
+            Assert.AreEqual("Test Product 3", productCreateEditFormViewModel.Name);
+            Assert.AreEqual("Test Description 3", productCreateEditFormViewModel.Description);
+            Assert.AreEqual(4, productCreateEditFormViewModel.CategoryId);
+            Assert.AreEqual(4, productCreateEditFormViewModel.Categories.ToList().Count);
+        }
+
+        [TestMethod]
+        public void Delete_GetRequest_ReturnViewResultWithProduct()
+        {
+            var mockProductService = new Mock<IProductService>();
+            var mockCategoryService = new Mock<ICategoryService>();
+            var mockCategoryProductService = new Mock<ICategoryAndProductService>();
+
+            var controller = new ProductsController(mockProductService.Object,
+                                                                mockCategoryService.Object,
+                                                                mockCategoryProductService.Object);
+
+            mockProductService.Setup(x => x.GetProductById(3)).Returns(GetProducts().Single(x => x.Id == 3));
+            mockCategoryService.Setup(x => x.GetAllCategories()).Returns(GetCategories());
+
+            var result = controller.Delete(3) as ViewResult;
+            var product = result.ViewData.Model as Product;
+
+            Assert.IsNotNull(product);
+            Assert.AreEqual(3, product.Id);
+            Assert.AreEqual("Test Product 3", product.Name);
+            Assert.AreEqual("Test Description 3", product.Description);
+            Assert.AreEqual(4, product.CategoryId);           
+        }
+
+        [TestMethod]
+        public void Delete_PostValidModel_RedirectsToActionIndex()
+        {
+            var mockProductService = new Mock<IProductService>();
+            var mockCategoryService = new Mock<ICategoryService>();
+            var mockCategoryProductService = new Mock<ICategoryAndProductService>();
+
+            var controller = new ProductsController(mockProductService.Object,
+                                                                mockCategoryService.Object,
+                                                                mockCategoryProductService.Object);
+
+            var product = GetProducts().Single(x => x.Id == 2);
+            var result = controller.Delete(product) as RedirectToRouteResult;
+            Assert.AreEqual(result.RouteValues["Action"], "Index");
+        }
+
+        [TestMethod]
+        public void FindByName_NameIsNull_RedirectsToActionIndex()
+        {
+            var mockProductService = new Mock<IProductService>();
+            var mockCategoryService = new Mock<ICategoryService>();
+            var mockCategoryProductService = new Mock<ICategoryAndProductService>();
+
+            var controller = new ProductsController(mockProductService.Object,
+                                                                mockCategoryService.Object,
+                                                                mockCategoryProductService.Object);
+
+            var result = controller.FindByName(null) as RedirectToRouteResult;
+            Assert.AreEqual(result.RouteValues["Action"], "Index"); 
+        }
+
+        [TestMethod]
+        public void FindByName_ProductIsNull_ReturnHttpNotFound()
+        {
+            var mockProductService = new Mock<IProductService>();
+            var mockCategoryService = new Mock<ICategoryService>();
+            var mockCategoryProductService = new Mock<ICategoryAndProductService>();
+
+            var controller = new ProductsController(mockProductService.Object,
+                                                                mockCategoryService.Object,
+                                                                mockCategoryProductService.Object);
+            mockProductService.Setup(x => x.GetProductByName("DoNotFindThisName"))
+                .Returns(GetProducts().SingleOrDefault(x => x.Id == 999));
+
+            var result = controller.FindByName("DoNotFindThisName");
+            var model = result as ViewResult;
+            Assert.IsInstanceOfType(result, typeof(HttpNotFoundResult));
+            Assert.IsNull(model);
+        }
+
         private List<Product> GetProducts()
         {
             var products = new List<Product>
             {
-                new Product {Id = 1, Name = "Test Product 1",Description = "Test Description 1" },
-                new Product {Id = 2, Name = "Test Product 2",Description = "Test Description 2" },
-                new Product {Id = 3, Name = "Test Product 3",Description = "Test Description 3" },
-                new Product {Id = 4, Name = "Test Product 4",Description = "Test Description 4" },
+                new Product {Id = 1, Name = "Test Product 1",Description = "Test Description 1", CategoryId = 2},
+                new Product {Id = 2, Name = "Test Product 2",Description = "Test Description 2", CategoryId = 2} ,
+                new Product {Id = 3, Name = "Test Product 3",Description = "Test Description 3", CategoryId = 4},
+                new Product {Id = 4, Name = "Test Product 4",Description = "Test Description 4", CategoryId = 2},
             };
             return products;
         }
