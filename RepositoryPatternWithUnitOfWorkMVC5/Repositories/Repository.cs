@@ -65,12 +65,13 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.Repositories
         }
         public virtual IEnumerable<TEntity> Include(params Expression<Func<TEntity, object>>[] includeProperties)
         {
-            IQueryable<TEntity> query = _context.Set<TEntity>();
+            IQueryable<TEntity> query = _dbset;
             foreach (var includeProperty in includeProperties)
             {
                 query = query.Include(includeProperty);
             }
             return query.AsEnumerable();
+
         }
     }
 }

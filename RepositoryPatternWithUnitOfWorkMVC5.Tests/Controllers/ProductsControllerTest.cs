@@ -234,7 +234,31 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.Tests.Controllers
                                                                 mockCategoryProductService.Object);
 
             var result = controller.FindByName(null) as RedirectToRouteResult;
-            Assert.AreEqual(result.RouteValues["Action"], "Index"); 
+            Assert.AreEqual(result.RouteValues["Action"], "Index");
+        }
+
+        [TestMethod]
+        public void FindByName_NameNotNull_ReturnsViewResultWithProduct()
+        {
+            var mockProductService = new Mock<IProductService>();
+            var mockCategoryService = new Mock<ICategoryService>();
+            var mockCategoryProductService = new Mock<ICategoryAndProductService>();
+
+            var controller = new ProductsController(mockProductService.Object,
+                                                                mockCategoryService.Object,
+                                                                mockCategoryProductService.Object);
+            mockProductService.Setup(x => x.GetProductByName("Test Product 2"))
+                .Returns(GetProducts().Single(x => x.Name == "Test Product 2"));
+
+            var result = controller.FindByName("Test Product 2") as ViewResult;
+            var products = result.ViewData.Model as List<Product>;
+
+            Assert.IsNotNull(products);
+            Assert.AreEqual(2, products[0].Id);
+            Assert.AreEqual("Test Product 2", products[0].Name);
+            Assert.AreEqual("Test Description 2", products[0].Description);
+            Assert.AreEqual(2, products[0].CategoryId);
+            Assert.AreEqual(1, products.Count);
         }
 
         [TestMethod]
@@ -247,10 +271,177 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.Tests.Controllers
             var controller = new ProductsController(mockProductService.Object,
                                                                 mockCategoryService.Object,
                                                                 mockCategoryProductService.Object);
-            mockProductService.Setup(x => x.GetProductByName("DoNotFindThisName"))
-                .Returns(GetProducts().SingleOrDefault(x => x.Id == 999));
 
-            var result = controller.FindByName("DoNotFindThisName");
+            mockProductService.Setup(x => x.GetProductByName("Test Product 2")).Returns(default(Product));
+
+            var result = controller.FindByName("Test Product 2");
+            var model = result as ViewResult;
+            Assert.IsInstanceOfType(result, typeof(HttpNotFoundResult));
+            Assert.IsNull(model);
+
+        }
+
+        [TestMethod]
+        public void GetAllWithCategory_ProductsNotFound_ReturnHttpNotFound()
+        {
+            var mockProductService = new Mock<IProductService>();
+            var mockCategoryService = new Mock<ICategoryService>();
+            var mockCategoryProductService = new Mock<ICategoryAndProductService>();
+
+            var controller = new ProductsController(mockProductService.Object,
+                                                                mockCategoryService.Object,
+                                                                mockCategoryProductService.Object);
+
+            mockProductService.Setup(x => x.GetAllProductsWithCategory()).Returns(default(List<Product>));            
+
+            var result = controller.GetAllWithCategory();
+            var model = result as ViewResult;
+            Assert.IsInstanceOfType(result, typeof(HttpNotFoundResult));
+            Assert.IsNull(model);
+        }
+
+        [TestMethod]
+        public void GetAllWithCategory_ProductsFound_ReturnsViewResultWithProducts()
+        {
+            var mockProductService = new Mock<IProductService>();
+            var mockCategoryService = new Mock<ICategoryService>();
+            var mockCategoryProductService = new Mock<ICategoryAndProductService>();
+
+            var controller = new ProductsController(mockProductService.Object,
+                                                                mockCategoryService.Object,
+                                                                mockCategoryProductService.Object);
+            mockProductService.Setup(x => x.GetAllProductsWithCategory()).Returns(GetProducts());
+
+            var result = controller.GetAllWithCategory() as ViewResult;            
+            var products = result.ViewData.Model as List<Product>;
+
+            Assert.IsNotNull(products);
+            Assert.AreEqual(2, products[1].Id);
+            Assert.AreEqual("Test Product 3", products[2].Name);
+            Assert.AreEqual("Test Description 1", products[0].Description);
+            Assert.AreEqual(4, products[2].CategoryId);
+            Assert.AreEqual(4, products.Count);
+            Assert.AreEqual("Index", result.ViewName);
+            
+        }
+
+
+        [TestMethod]
+        public void GetOneWithCategory_IdIsNull_RedirectsToActionIndex()
+        {
+            var mockProductService = new Mock<IProductService>();
+            var mockCategoryService = new Mock<ICategoryService>();
+            var mockCategoryProductService = new Mock<ICategoryAndProductService>();
+
+            var controller = new ProductsController(mockProductService.Object,
+                                                                mockCategoryService.Object,
+                                                                mockCategoryProductService.Object);
+
+            var result = controller.GetOneWithCategory(null) as RedirectToRouteResult;
+            Assert.AreEqual(result.RouteValues["Action"], "Index");
+        }
+
+        [TestMethod]
+        public void GetOneWithCategory_IdNotNull_ReturnsViewResultWithProduct()
+        {
+            var mockProductService = new Mock<IProductService>();
+            var mockCategoryService = new Mock<ICategoryService>();
+            var mockCategoryProductService = new Mock<ICategoryAndProductService>();
+
+            var controller = new ProductsController(mockProductService.Object,
+                                                                mockCategoryService.Object,
+                                                                mockCategoryProductService.Object);
+
+            mockProductService.Setup(x => x.GetProductWithCategory(1))
+                .Returns(GetProducts().Single(x => x.Id == 1));
+
+            var result = controller.GetOneWithCategory(1) as ViewResult;
+            var products = result.ViewData.Model as List<Product>;
+
+            Assert.IsNotNull(products);
+            Assert.AreEqual(1, products[0].Id);
+            Assert.AreEqual("Test Product 1", products[0].Name);
+            Assert.AreEqual("Test Description 1", products[0].Description);
+            Assert.AreEqual(2, products[0].CategoryId);
+            Assert.AreEqual(1, products.Count);
+            Assert.AreEqual("Index", result.ViewName);
+        }
+
+        [TestMethod]
+        public void GetOneWithCategory_ProductIsNull_ReturnHttpNotFound()
+        {
+            var mockProductService = new Mock<IProductService>();
+            var mockCategoryService = new Mock<ICategoryService>();
+            var mockCategoryProductService = new Mock<ICategoryAndProductService>();
+
+            var controller = new ProductsController(mockProductService.Object,
+                                                                mockCategoryService.Object,
+                                                                mockCategoryProductService.Object);
+
+            mockProductService.Setup(x => x.GetProductWithCategory(1)).Returns(default(Product));
+
+            var result = controller.GetOneWithCategory(1);
+            var model = result as ViewResult;
+            Assert.IsInstanceOfType(result, typeof(HttpNotFoundResult));
+            Assert.IsNull(model);
+
+        }
+
+        [TestMethod]
+        public void FindById_IdIsNull_RedirectsToActionIndex()
+        {
+            var mockProductService = new Mock<IProductService>();
+            var mockCategoryService = new Mock<ICategoryService>();
+            var mockCategoryProductService = new Mock<ICategoryAndProductService>();
+
+            var controller = new ProductsController(mockProductService.Object,
+                                                                mockCategoryService.Object,
+                                                                mockCategoryProductService.Object);
+
+            var result = controller.FindById(null) as RedirectToRouteResult;
+            Assert.AreEqual(result.RouteValues["Action"], "Index");
+        }
+
+        [TestMethod]
+        public void FindById_IdNotNull_ReturnsViewResultWithProduct()
+        {
+            var mockProductService = new Mock<IProductService>();
+            var mockCategoryService = new Mock<ICategoryService>();
+            var mockCategoryProductService = new Mock<ICategoryAndProductService>();
+
+            var controller = new ProductsController(mockProductService.Object,
+                                                                mockCategoryService.Object,
+                                                                mockCategoryProductService.Object);
+
+            mockProductService.Setup(x => x.GetProductById(1))
+                .Returns(GetProducts().Single(x => x.Id == 1));
+
+            var result = controller.FindById(1) as ViewResult;
+            var products = result.ViewData.Model as List<Product>;
+
+            Assert.IsNotNull(products);
+            Assert.AreEqual(1, products[0].Id);
+            Assert.AreEqual("Test Product 1", products[0].Name);
+            Assert.AreEqual("Test Description 1", products[0].Description);
+            Assert.AreEqual(2, products[0].CategoryId);
+            Assert.AreEqual(1, products.Count);
+            Assert.AreEqual("Index", result.ViewName);
+        }
+
+        [TestMethod]
+        public void FindById_ProductIsNull_ReturnHttpNotFound()
+        {
+            var mockProductService = new Mock<IProductService>();
+            var mockCategoryService = new Mock<ICategoryService>();
+            var mockCategoryProductService = new Mock<ICategoryAndProductService>();
+
+            var controller = new ProductsController(mockProductService.Object,
+                                                                mockCategoryService.Object,
+                                                                mockCategoryProductService.Object);
+
+            mockProductService.Setup(x => x.GetProductById(1)).Returns(default(Product));
+
+            var result = controller.FindById(1);
             var model = result as ViewResult;
             Assert.IsInstanceOfType(result, typeof(HttpNotFoundResult));
             Assert.IsNull(model);
