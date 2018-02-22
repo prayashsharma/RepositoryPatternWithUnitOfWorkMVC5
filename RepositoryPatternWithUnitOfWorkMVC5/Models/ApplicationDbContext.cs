@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
-using System.Linq;
-using System.Web;
 
 namespace RepositoryPatternWithUnitOfWorkMVC5.Models
 {
@@ -12,7 +8,6 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.Models
         public ApplicationDbContext()
             : base("DefaultConnection")
         {
-
         }
 
         public DbSet<Product> Products { get; set; }

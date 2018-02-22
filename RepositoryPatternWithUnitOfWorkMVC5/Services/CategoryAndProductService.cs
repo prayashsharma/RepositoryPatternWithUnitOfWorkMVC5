@@ -1,10 +1,7 @@
 ﻿using RepositoryPatternWithUnitOfWorkMVC5.Models;
 using RepositoryPatternWithUnitOfWorkMVC5.Repositories.Interfaces;
 using RepositoryPatternWithUnitOfWorkMVC5.Services.Interfaces;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace RepositoryPatternWithUnitOfWorkMVC5.Services
 {
@@ -13,7 +10,7 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.Services
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<Category> _categoryRepository;
 
-        public CategoryAndProductService(IUnitOfWork unitOfWork): base(unitOfWork)
+        public CategoryAndProductService(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
             _categoryRepository = UnitOfWork.GetRepository<Category>();
             _productRepository = UnitOfWork.GetRepository<Product>();
@@ -42,7 +39,7 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.Services
                 };
                 ProductRepository.Add(product);
             }
-            UnitOfWork.Complete(); 
+            UnitOfWork.Complete();
         }
     }
 }

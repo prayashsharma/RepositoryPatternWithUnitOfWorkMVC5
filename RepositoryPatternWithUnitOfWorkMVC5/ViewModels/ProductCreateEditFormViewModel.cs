@@ -1,9 +1,6 @@
 ﻿using RepositoryPatternWithUnitOfWorkMVC5.Models;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 
 namespace RepositoryPatternWithUnitOfWorkMVC5.ViewModels
 {
@@ -13,6 +10,7 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.ViewModels
         {
             Categories = new List<Category>();
         }
+
         public int Id { get; set; }
 
         [Required]
@@ -25,7 +23,7 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.ViewModels
 
         [Required(ErrorMessage = "Select a category.")]
         public int CategoryId { get; set; }
-        public IEnumerable<Category> Categories { get; set; }
 
+        public IEnumerable<Category> Categories { get; set; }
     }
 }

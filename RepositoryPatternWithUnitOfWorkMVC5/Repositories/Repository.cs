@@ -17,10 +17,12 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.Repositories
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _dbset = _context.Set<TEntity>();
         }
+
         public TEntity Get(int id)
         {
             return _dbset.Find(id);
         }
+
         public IEnumerable<TEntity> GetAll()
         {
             return _dbset.ToList();
@@ -55,6 +57,7 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.Repositories
         {
             _dbset.RemoveRange(entities);
         }
+
         public void Edit(TEntity entity, int key)
         {
             var existing = _dbset.Find(key);
@@ -63,6 +66,7 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.Repositories
                 _context.Entry(existing).CurrentValues.SetValues(entity);
             }
         }
+
         public virtual IEnumerable<TEntity> Include(params Expression<Func<TEntity, object>>[] includeProperties)
         {
             IQueryable<TEntity> query = _dbset;
@@ -71,7 +75,6 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.Repositories
                 query = query.Include(includeProperty);
             }
             return query.AsEnumerable();
-
         }
     }
 }

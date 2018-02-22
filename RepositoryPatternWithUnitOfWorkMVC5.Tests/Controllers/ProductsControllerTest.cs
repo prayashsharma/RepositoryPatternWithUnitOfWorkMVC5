@@ -12,7 +12,7 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.Tests.Controllers
 {
     [TestClass]
     public class ProductsControllerTest
-    {        
+    {
         [TestMethod]
         public void Index_CallService_ReturnViewResultWithListOfProducts()
         {
@@ -21,10 +21,10 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.Tests.Controllers
             var mockCategoryService = new Mock<ICategoryService>();
             var mockCategoryProductService = new Mock<ICategoryAndProductService>();
 
-            var controller = new ProductsController(mockProductService.Object, 
-                                                    mockCategoryService.Object, 
+            var controller = new ProductsController(mockProductService.Object,
+                                                    mockCategoryService.Object,
                                                     mockCategoryProductService.Object);
-            
+
             mockProductService.Setup(x => x.GetAllProducts()).Returns(GetProducts());
 
             // Act
@@ -32,10 +32,10 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.Tests.Controllers
             var products = result.ViewData.Model as List<Product>;
 
             // Assert
-            Assert.IsNotNull(result);            
+            Assert.IsNotNull(result);
             Assert.AreEqual(4, products.Count);
             Assert.AreEqual(1, products[0].Id);
-            Assert.AreEqual("Test Product 3", products[2].Name); 
+            Assert.AreEqual("Test Product 3", products[2].Name);
         }
 
         [TestMethod]
@@ -44,7 +44,7 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.Tests.Controllers
             var mockProductService = new Mock<IProductService>();
             var mockCategoryService = new Mock<ICategoryService>();
             var mockCategoryProductService = new Mock<ICategoryAndProductService>();
-            
+
             var controller = new ProductsController(mockProductService.Object,
                                                                 mockCategoryService.Object,
                                                                 mockCategoryProductService.Object);
@@ -52,9 +52,9 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.Tests.Controllers
 
             var productCreateEditViewModel = new ProductCreateEditFormViewModel();
             controller.ModelState.AddModelError("FakeError", "Fake Error Message");
-            
+
             var result = controller.Create(productCreateEditViewModel) as ViewResult;
-            var categories = ((ProductCreateEditFormViewModel)result.ViewData.Model).Categories.ToList(); 
+            var categories = ((ProductCreateEditFormViewModel)result.ViewData.Model).Categories.ToList();
 
             Assert.IsNotNull(result);
             Assert.AreEqual(string.Empty, result.ViewName);
@@ -73,7 +73,7 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.Tests.Controllers
 
             var controller = new ProductsController(mockProductService.Object,
                                                                 mockCategoryService.Object,
-                                                                mockCategoryProductService.Object);           
+                                                                mockCategoryProductService.Object);
 
             var productCreateEditFormViewModel = new ProductCreateEditFormViewModel
             {
@@ -143,7 +143,7 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.Tests.Controllers
 
             var controller = new ProductsController(mockProductService.Object,
                                                                 mockCategoryService.Object,
-                                                                mockCategoryProductService.Object);            
+                                                                mockCategoryProductService.Object);
 
             var productCreateEditFormViewModel = new ProductCreateEditFormViewModel
             {
@@ -172,7 +172,7 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.Tests.Controllers
             mockCategoryService.Setup(x => x.GetAllCategories()).Returns(GetCategories());
 
             var result = controller.Edit(3) as ViewResult;
-            var productCreateEditFormViewModel = result.ViewData.Model as ProductCreateEditFormViewModel;            
+            var productCreateEditFormViewModel = result.ViewData.Model as ProductCreateEditFormViewModel;
 
             Assert.IsNotNull(productCreateEditFormViewModel);
             Assert.AreEqual(3, productCreateEditFormViewModel.Id);
@@ -203,7 +203,7 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.Tests.Controllers
             Assert.AreEqual(3, product.Id);
             Assert.AreEqual("Test Product 3", product.Name);
             Assert.AreEqual("Test Description 3", product.Description);
-            Assert.AreEqual(4, product.CategoryId);           
+            Assert.AreEqual(4, product.CategoryId);
         }
 
         [TestMethod]
@@ -278,7 +278,6 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.Tests.Controllers
             var model = result as ViewResult;
             Assert.IsInstanceOfType(result, typeof(HttpNotFoundResult));
             Assert.IsNull(model);
-
         }
 
         [TestMethod]
@@ -292,7 +291,7 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.Tests.Controllers
                                                                 mockCategoryService.Object,
                                                                 mockCategoryProductService.Object);
 
-            mockProductService.Setup(x => x.GetAllProductsWithCategory()).Returns(default(List<Product>));            
+            mockProductService.Setup(x => x.GetAllProductsWithCategory()).Returns(default(List<Product>));
 
             var result = controller.GetAllWithCategory();
             var model = result as ViewResult;
@@ -312,7 +311,7 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.Tests.Controllers
                                                                 mockCategoryProductService.Object);
             mockProductService.Setup(x => x.GetAllProductsWithCategory()).Returns(GetProducts());
 
-            var result = controller.GetAllWithCategory() as ViewResult;            
+            var result = controller.GetAllWithCategory() as ViewResult;
             var products = result.ViewData.Model as List<Product>;
 
             Assert.IsNotNull(products);
@@ -322,9 +321,7 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.Tests.Controllers
             Assert.AreEqual(4, products[2].CategoryId);
             Assert.AreEqual(4, products.Count);
             Assert.AreEqual("Index", result.ViewName);
-            
         }
-
 
         [TestMethod]
         public void GetOneWithCategory_IdIsNull_RedirectsToActionIndex()
@@ -384,7 +381,6 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.Tests.Controllers
             var model = result as ViewResult;
             Assert.IsInstanceOfType(result, typeof(HttpNotFoundResult));
             Assert.IsNull(model);
-
         }
 
         [TestMethod]

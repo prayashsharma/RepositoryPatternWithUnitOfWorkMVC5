@@ -1,8 +1,4 @@
 ﻿using RepositoryPatternWithUnitOfWorkMVC5.Repositories.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace RepositoryPatternWithUnitOfWorkMVC5.Services
 {
@@ -14,6 +10,7 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.Services
         {
             _unitOfWork = unitOfWork;
         }
+
         protected IUnitOfWork UnitOfWork
         {
             get { return _unitOfWork; }

@@ -1,8 +1,7 @@
 namespace RepositoryPatternWithUnitOfWorkMVC5.Migrations
 {
-    using System;
     using System.Data.Entity.Migrations;
-    
+
     public partial class Initial : DbMigration
     {
         public override void Up()
@@ -10,27 +9,26 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.Migrations
             CreateTable(
                 "dbo.Category",
                 c => new
-                    {
-                        Id = c.Int(nullable: false, identity: true),
-                        Name = c.String(),
-                    })
+                {
+                    Id = c.Int(nullable: false, identity: true),
+                    Name = c.String(),
+                })
                 .PrimaryKey(t => t.Id);
-            
+
             CreateTable(
                 "dbo.Product",
                 c => new
-                    {
-                        Id = c.Int(nullable: false, identity: true),
-                        Name = c.String(),
-                        Description = c.String(),
-                        CategoryId = c.Int(nullable: false),
-                    })
+                {
+                    Id = c.Int(nullable: false, identity: true),
+                    Name = c.String(),
+                    Description = c.String(),
+                    CategoryId = c.Int(nullable: false),
+                })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.Category", t => t.CategoryId, cascadeDelete: true)
                 .Index(t => t.CategoryId);
-            
         }
-        
+
         public override void Down()
         {
             DropForeignKey("dbo.Product", "CategoryId", "dbo.Category");

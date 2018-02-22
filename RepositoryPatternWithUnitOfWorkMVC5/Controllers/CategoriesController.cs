@@ -1,9 +1,6 @@
 ﻿using RepositoryPatternWithUnitOfWorkMVC5.Models;
 using RepositoryPatternWithUnitOfWorkMVC5.Services.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace RepositoryPatternWithUnitOfWorkMVC5.Controllers
@@ -20,12 +17,12 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.Controllers
         }
 
         public ActionResult Index()
-        {            
+        {
             return View(_categoryService.GetAllCategories());
         }
 
         public ActionResult Create()
-        {            
+        {
             return View();
         }
 
@@ -34,21 +31,21 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.Controllers
         {
             if (!ModelState.IsValid)
                 return View(model);
-            
+
             _categoryService.AddCategory(model);
             return RedirectToAction("Index");
         }
+
         public ActionResult Edit(int id)
-        {            
+        {
             return View(_categoryService.GetCategoryById(id));
         }
 
         [HttpPost]
         public ActionResult Edit(Category model)
         {
-            if (!ModelState.IsValid)            
+            if (!ModelState.IsValid)
                 return View(model);
-                
 
             _categoryService.EditCategory(model);
             return RedirectToAction("Index");
@@ -66,7 +63,7 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.Controllers
             {
                 _categoryService.RemoveCategory(model);
             }
-            
+
             return RedirectToAction("Index");
         }
 
@@ -79,6 +76,5 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.Controllers
         {
             return View(_categoryService.GetAllCategoriesWithProducts());
         }
-
     }
 }

@@ -3,13 +3,12 @@ using RepositoryPatternWithUnitOfWorkMVC5.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 
 namespace RepositoryPatternWithUnitOfWorkMVC5.Repositories
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly ApplicationDbContext _context;        
+        private readonly ApplicationDbContext _context;
         private Dictionary<Type, object> _repositories;
 
         public UnitOfWork(ApplicationDbContext context)

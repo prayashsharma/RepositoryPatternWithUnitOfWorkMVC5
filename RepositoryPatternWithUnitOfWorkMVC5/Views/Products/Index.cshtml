@@ -44,12 +44,11 @@
                 @Html.DisplayFor(modelItem => item.Category.Name)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |                
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
                 @Html.ActionLink("Delete", "Delete", new { id = item.Id })
             </td>
         </tr>
     }
-
 </table>
 <hr />
 
@@ -81,4 +80,3 @@
 {
     <button type="submit" class="btn btn-primary mb-2">Search to return all Products with Category</button>
 }
-

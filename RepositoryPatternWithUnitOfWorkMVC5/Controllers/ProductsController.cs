@@ -3,15 +3,12 @@ using RepositoryPatternWithUnitOfWorkMVC5.Services.Interfaces;
 using RepositoryPatternWithUnitOfWorkMVC5.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace RepositoryPatternWithUnitOfWorkMVC5.Controllers
 {
     public class ProductsController : Controller
     {
-
         private readonly IProductService _productService;
         private readonly ICategoryService _categoryService;
         private readonly ICategoryAndProductService _categoryAndProductService;
@@ -22,9 +19,10 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.Controllers
             _categoryService = categoryService ?? throw new ArgumentNullException(nameof(categoryService));
             _categoryAndProductService = categoryAndProductService ?? throw new ArgumentNullException(nameof(categoryAndProductService));
         }
+
         public ActionResult Index()
         {
-            var products = _productService.GetAllProducts();            
+            var products = _productService.GetAllProducts();
             return View(products);
         }
 
@@ -58,7 +56,6 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.Controllers
             return RedirectToAction("Index");
         }
 
-
         public ActionResult Delete(int id)
         {
             var product = _productService.GetProductById(id);
@@ -86,7 +83,7 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.Controllers
                 CategoryId = product.CategoryId,
                 Categories = _categoryService.GetAllCategories()
             };
-            
+
             return View(model);
         }
 
@@ -144,18 +141,16 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.Controllers
 
             //just for the demo, I am returning single product as a list
             return View("Index", new List<Product> { product });
-
         }
 
         public ActionResult FindById(int? id)
-        {            
-            if (id == null)            
-                return RedirectToAction("Index");            
+        {
+            if (id == null)
+                return RedirectToAction("Index");
 
             var product = _productService.GetProductById(id.GetValueOrDefault());
             if (product == null)
                 return HttpNotFound();
-
 
             //just for the demo, I am returning single product as a list
             return View("Index", new List<Product> { product });
@@ -175,7 +170,7 @@ namespace RepositoryPatternWithUnitOfWorkMVC5.Controllers
                 new Product {Name = "P2",Description = "blah blah 2" },
                 new Product {Name = "P3",Description = "blah blah 3" },
                 new Product {Name = "P4",Description = "blah blah 4" },
-            };            
+            };
             _categoryAndProductService.AddCategoryWithProduct(newCategory, newProducts);
             return RedirectToAction("Index");
         }
